@@ -431,5 +431,93 @@ Finally, we can use the new operations like this:
 You can find the complete implementation for this section in
 [shape6.cc](./shape6.cc).  
 
-
 -----------------------------------------------------------
+### Using a real shapes
+
+The following examples replaces the dummy shapes with shapes from the
+[SFML](https://www.sfml-dev.org/index.php) library.
+
+We create a drawing using SFML shapes (sf::CircleShape, sf::RectangleShape) and
+add 'methods' to Scale and set the FillColor using the visitor pattern
+implemented in std::visit.
+
+```C++
+class Scale {
+public:
+
+  Scale(float ratio) : m_ratio(ratio) {}
+
+  void operator()(Circle &s) { s.setRadius(s.getRadius() * m_ratio); }
+  void operator()(Triangle &s) { s.setRadius(s.getRadius() * m_ratio); }
+
+  ...
+
+```
+
+We can then use these visitors like this:
+
+
+```C++
+  Drawing d;
+  auto & circle = d.add<Circle>(50.f);
+  auto &triangle = d.add<Triangle>(50.f);
+  ...
+  auto &d1 = d.add<Drawing>();
+  auto &r1 = d1.add<Rectangle>(V2f{25, 50});
+  ...
+
+  FillColor yellow(Color::Yellow);
+  yellow(d1);
+
+  Scale bigger(2.0);
+  bigger(d);
+
+  window.show(d);
+
+```
+
+Earlier we observed that a `Drawing` is a
+[composite](https://en.wikipedia.org/wiki/Composite_pattern) that represents
+both a Shape and a container of Shapes.
+
+We now combine the 
+[Visitor](https://en.wikipedia.org/wiki/Visitor_pattern) and
+[composite](https://en.wikipedia.org/wiki/Composite_pattern) patterns in the
+final example:
+
+```C++
+template <typename ...Leaf>
+class Composite {
+public:
+  using value_type = std::variant<Leaf..., Composite>;
+
+  ...
+  
+  template <typename T>
+  void accept(T &visitor)
+  {
+    for (auto &s : m_composite)
+    {
+      std::visit(visitor, s);
+    }
+  }
+
+private:
+  std::vector<value_type> m_composite;
+};
+
+using Drawing = Composite<Circle, Triangle, Rectangle>;
+
+```
+
+
+This allows us to simplify overloading `operator()(Drawing &d)` in each visitor:
+
+
+```C++
+
+  void operator()(Drawing &d) { d.accept(*this); }
+```
+
+You can find the complete implementation for this section in
+[shape7.cc](./shape7.cc) and [shape8.cc](./shape8.cc).  
