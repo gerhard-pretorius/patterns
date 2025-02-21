@@ -1,5 +1,5 @@
 /*
-clang++ -std=c++20 shape7.cc \
+clang++ -std=c++20 shape8.cc \
   -I ~/opt/include \
   -L ~/opt/lib -lsfml-graphics -lsfml-window -lsfml-system
 

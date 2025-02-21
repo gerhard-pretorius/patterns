@@ -51,7 +51,7 @@ private:
 
 ```
 
-A `Drawing` is a [composite](https://en.wikipedia.org/wiki/Composite_pattern)
+A `Drawing` is a [Composite](https://en.wikipedia.org/wiki/Composite_pattern)
 that represents both a Shape and a container of Shapes.
 
 ```C++
@@ -477,12 +477,12 @@ We can then use these visitors like this:
 ```
 
 Earlier we observed that a `Drawing` is a
-[composite](https://en.wikipedia.org/wiki/Composite_pattern) that represents
+[Composite](https://en.wikipedia.org/wiki/Composite_pattern) that represents
 both a Shape and a container of Shapes.
 
 We now combine the 
 [Visitor](https://en.wikipedia.org/wiki/Visitor_pattern) and
-[composite](https://en.wikipedia.org/wiki/Composite_pattern) patterns in the
+[Composite](https://en.wikipedia.org/wiki/Composite_pattern) patterns in the
 final example:
 
 ```C++
